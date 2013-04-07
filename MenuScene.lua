@@ -122,6 +122,11 @@ function gScene:exitScene(event)
 	gGCBtn = nil
 	gSoundBtn = nil
 	gMusicBtn = nil
+
+	if gBlackBackgroundRect then
+		gBlackBackgroundRect:removeSelf()
+		gBlackBackgroundRect = nil
+	end
 end
 
 function gScene:destroyScene(event)
