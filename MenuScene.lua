@@ -12,6 +12,10 @@ local gMusicBtn
 local gHTPBackBtn
 local gHTPImg
 
+local gStartInfo
+
+local gInfoTimer
+
 local function toOnOff(value)
 	if value then
 		return "on"
@@ -22,10 +26,6 @@ end
 local function deactivateMenuButtons()
 	gBlackBackgroundRect = display.newRect(0, 0, display.contentWidth, display.contentHeight)
 	gBlackBackgroundRect:setFillColor(0, 0, 0, 196)
-	gStartBtn:deactivate()
-	gHTPBtn:deactivate()
-	gSoundBtn:deactivate()
-	gMusicBtn:deactivate()
 end
 
 local function activateMenuButtons()
@@ -34,16 +34,13 @@ local function activateMenuButtons()
 		gBlackBackgroundRect = nil
 	end
 
-	gStartBtn:activate()
-	gHTPBtn:activate()
-	gSoundBtn:activate()
-	gMusicBtn:activate()
 end
 
-local function startGameBtnClicked()
+local function startGameBtnClicked(event)
 	gStoryboard.gotoScene("GameplayScene", "fade", 300)
 	return true
 end
+
 
 local function howToPlayBackBtnClicked()
 	gHTPBackBtn:removeEventListener("touch", gHTPBackBtn)
@@ -86,21 +83,31 @@ function gScene:createScene(event)
 	local screenGroup = self.view
 
 	-- Background image
-	gBackgroundImg = display.newImageRect("gfx/menu/background.png", 568, 384)
+	gBackgroundImg = display.newImageRect("gfx/menu/title.png", 568, 320)
 	gBackgroundImg.x, gBackgroundImg.y = display.contentWidth / 2, display.contentHeight / 2
 
 	-- Buttons
-	gStartBtn = gButtonsManager.new("gfx/menu/start", 153, 85, startGameBtnClicked, _G.sound.button, display.contentWidth/2, display.contentHeight - 85 / 2)
-	gHTPBtn = gButtonsManager.new("gfx/menu/htp", 75, 70, howToPlayBtnClicked, _G.sound.button, 25, 25)
-	gSoundBtn = gButtonsManager.new("gfx/menu/sound_"..toOnOff(_G.userData.isSound), 75, 70, soundBtnClicked, _G.sound.button, display.contentWidth - 72.5, display.contentHeight - 25)
-	gMusicBtn = gButtonsManager.new("gfx/menu/music_"..toOnOff(_G.userData.isMusic), 75, 70, musicBtnClicked, _G.sound.button, display.contentWidth - 25, display.contentHeight - 25)
-	
+	--gStartBtn = gButtonsManager.new("gfx/menu/start", 153, 85, startGameBtnClicked, _G.sound.button, display.contentWidth/2, display.contentHeight - 85 / 2)
+	--gHTPBtn = gButtonsManager.new("gfx/menu/htp", 75, 70, howToPlayBtnClicked, _G.sound.button, 25, 25)
+	--gSoundBtn = gButtonsManager.new("gfx/menu/sound_"..toOnOff(_G.userData.isSound), 75, 70, soundBtnClicked, _G.sound.button, display.contentWidth - 72.5, display.contentHeight - 25)
+	--gMusicBtn = gButtonsManager.new("gfx/menu/music_"..toOnOff(_G.userData.isMusic), 75, 70, musicBtnClicked, _G.sound.button, display.contentWidth - 25, display.contentHeight - 25)
+
+	gStartInfo = display.newImageRect("gfx/menu/tap.png", 261, 36)
+	gStartInfo.x, gStartInfo.y = display.contentCenterX, 270
+	gStartInfo.isVisible = false
+
+	gInfoTimer = timer.performWithDelay(600, function ()
+		gStartInfo.isVisible = not gStartInfo.isVisible
+	end, 0)
+
+
 	-- Add everything to screen group
 	screenGroup:insert(gBackgroundImg)
-	screenGroup:insert(gStartBtn)
-	screenGroup:insert(gHTPBtn)
-	screenGroup:insert(gSoundBtn)
-	screenGroup:insert(gMusicBtn)
+	screenGroup:insert(gStartInfo)
+
+	Runtime:addEventListener("touch", function(event)
+		gStoryboard.gotoScene("GameplayScene", "fade", 300)
+	end)
 end
 
 function gScene:enterScene(event)
@@ -110,11 +117,6 @@ end
 
 function gScene:exitScene(event)
 	deactivateMenuButtons()
-	gBackgroundImg:removeSelf()
-	gStartBtn:removeSelf()
-	gHTPBtn:removeSelf()
-	gSoundBtn:removeSelf()
-	gMusicBtn:removeSelf()
 	gBackgroundImg = nil
 	gStartBtn = nil
 	gHTPBtn = nil
