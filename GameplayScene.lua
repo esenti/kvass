@@ -20,6 +20,10 @@ local trajectories = {
 	--function(t, p) return t, -t^2 + p * t end
 }
 
+local sizes = {
+	{w=38, h=55},
+}
+
 local function trajectory(fun, time, param)
 	local x, y = trajectories[fun % table.getn(trajectories) + 1](time / 1000, param);
 	return display.contentWidth * 0.22 + x * 50 * param, display.contentHeight * 0.65 + y * display.contentHeight * 0.65
