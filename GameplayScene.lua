@@ -60,6 +60,24 @@ end
 
 local function nextFrame()
 	gGame.time = gGame.time + 1000 / 60.0
+	gGame.timeToNext = gGame.timeToNext + 1000 / 60.0
+
+	if gGame.timeToNext < 500 then
+		gPowerupText.text = "3"
+	elseif gGame.timeToNext < 1000 then
+		gPowerupText.text = "2"
+	elseif gGame.timeToNext < 1500 then
+		gPowerupText.text = "1"
+	elseif gGame.timeToNext < 1700 then
+		gPowerupText.text = "0"
+	else
+		gGame.timeToNext = 0
+
+		--local bullet = display.newImageRect("gfx/game/items/red.png", 32, 32)
+		--bullet.x, bullet.y, time.start = 100, 100, gGame.time
+		--table.insert(gGame.bullets, bullet)
+		--gScreenGroup:insert(bullet)
+	end
 
 	if gGame.turningDirection > 0 then
 		gGame.param = gGame.param + 0.01
@@ -72,14 +90,16 @@ local function nextFrame()
 		gGame.trajectory[i].x, gGame.trajectory[i].y = magic((10000 / 100) * i, gGame.param)
 	end
 
+	--for i = 1, #gGame.bullets, 1 do
+	--	gGame.bullets[i].x, gGame.bullets[i].y = magic(gGame.time - gGame.bullets[i].start, gGame.param)
+	--end
+
 	--gGame.cannon.rotation = gGame.cannonAngle
 
 	local xxx, yyy = magic(gGame.time, gGame.param)
 	gGame.bulletTest.x = xxx
 	gGame.bulletTest.y = yyy
 	gGame.bulletTest.rotation = 45
-
-	gPowerupText.text = 100 - math.round(gGame.time / 1000)
 
 	return true
 end
@@ -102,8 +122,6 @@ function gScene:createScene(event)
 
 	gScreenGroup = self.view
 
-	print(display.contentWidth)
-	print(display.contentHeight)
 	gBackground = display.newImageRect("gfx/game/background.png", display.contentWidth, display.contentHeight)
 	gBackground.x, gBackground.y = display.contentWidth / 2,  display.contentHeight / 2
 	gScreenGroup:insert(gBackground)
@@ -114,16 +132,17 @@ function gScene:createScene(event)
 
 	gPowerupText = display.newText("", 0, 0, "Good Times Rg", 96)
 	gPowerupText.x, gPowerupText.y = display.contentWidth / 2,  display.contentHeight / 2 - 100
-	gPowerupText:setTextColor(255, 255, 255, 64)
+	gPowerupText:setTextColor(255, 255, 255, 128)
 	gScreenGroup:insert(gPowerupText)
 
 	gScoreText.text = "0"
-	gPowerupText.text = ""
+	gPowerupText.text = "X"
 
 	gGame = {}
 	gGame.logicTimer = nil
 	gGame.points = 0
 	gGame.time = 0
+	gGame.timeToNext = 0
 
 	gGame.cannon = display.newImageRect("gfx/game/cannon.png", 181, 138)
 	gGame.cannon.x, gGame.cannon.y = 50, display.contentHeight - 138/2
@@ -150,9 +169,11 @@ function gScene:createScene(event)
 	gGame.bulletTest.x, gGame.bulletTest.y = 100, 100
 	gScreenGroup:insert(gGame.bulletTest)
 
+	gGame.bullets = {}
+
 	gGame.trajectory = {}
 	for i = 1, 100, 1 do
-		gGame.trajectory[i] = display.newImageRect("gfx/game/items/red.png", 4, 4)
+		gGame.trajectory[i] = display.newImageRect("gfx/game/marker.png", 4, 4)
 		gScreenGroup:insert(gGame.trajectory[i])
 	end
 
