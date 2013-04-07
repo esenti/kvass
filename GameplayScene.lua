@@ -1,6 +1,9 @@
 local gStoryboard = require("storyboard")
 local gButtonsManager  = require("ButtonsManager")
 local gScene = gStoryboard.newScene()
+local gPhysics = require("physics")
+gPhysics.start()
+gPhysics.setGravity(0, 10)
 
 local gBackgroundImg = {}
 local gScoreText
@@ -11,6 +14,11 @@ local gScreenGroup
 
 local gCurrentlyTouchedPoint = {}
 local gTouchingPoints = {}
+
+
+local function magic(time)
+	return display.contentWidth / 2 + math.sin(gGame.time / 1000) * 50, display.contentHeight / 2 + math.cos(gGame.time / 1000) * 50
+end
 
 local function onTouch(event)
 	if event.phase == "began" then
@@ -34,13 +42,17 @@ local function onTouch(event)
 	end
 
 	if #gTouchingPoints > 0 then
-		print("CLICKED " .. gTouchingPoints[1].x .. ", " .. gTouchingPoints[1].y) 
+		if gTouchingPoints[1].x < display.contentWidth / 2 then
+			gGame.turningDirection = -1
+		else
+			gGame.turningDirection = 1
+		end
 
-		if gTouchingPoints[1].y < 50 then
+		if gTouchingPoints[1].y < 20 then
 			gStoryboard.gotoScene("MenuScene", "fade", 300)
 		end
 	else
-		--gGame.player.turningDirection = 0
+		gGame.turningDirection = 0
     end
 
 	return true
@@ -49,15 +61,21 @@ end
 local function nextFrame()
 	gGame.time = gGame.time + 1000 / 60.0
 
-	print("message")
-	gGame.bullet.x = display.contentWidth / 2 - math.sin(gGame.time / 1000) * 200
-	gGame.bullet.y = display.contentHeight / 2 + math.cos(gGame.time / 1000) * 200
-	gGame.bullet:setFillColor(255, (math.sin(gGame.time / 10000) + 1) * 128, 0)
+	if gGame.turningDirection > 0 then
+		gGame.cannonAngle = gGame.cannonAngle - 1
+	elseif gGame.turningDirection < 0 then
+		gGame.cannonAngle = gGame.cannonAngle + 1
+	end
+
+	gGame.cannon.rotation = gGame.cannonAngle
+
+	local xxx, yyy = magic(time)
+	gGame.bulletTest.x = xxx
+	gGame.bulletTest.y = yyy
 
 	gScoreText.text = math.round(gGame.time / 1000)
 	gPowerupText.text = 100 - math.round(gGame.time / 1000)
-	-- for i = 1, #gGame.player.data, 1 do
-	-- end
+
 	return true
 end
 
@@ -103,20 +121,39 @@ function gScene:createScene(event)
 	gGame.time = 0
 
 	gGame.cannon = display.newImageRect("gfx/game/cannon.png", 181, 138)
-	gGame.cannon.x, gGame.cannon.y = 100, display.contentHeight - 138/2
+	gGame.cannon.x, gGame.cannon.y = 50, display.contentHeight - 138/2
 	gScreenGroup:insert(gGame.cannon)
+	gPhysics.addBody(gGame.cannon, "static")
 
 	gGame.rocket = display.newImageRect("gfx/game/rocket.png", 211, 371)
-	gGame.rocket.x, gGame.rocket.y = 100, 100
+	gGame.rocket.x, gGame.rocket.y = 400, 100
 	gScreenGroup:insert(gGame.rocket)
-	
-	gGame.bullet = display.newImageRect("gfx/game/items/1.png", 67, 67)
-	gGame.bullet.x, gGame.bullet.y = 100, 100
-	gScreenGroup:insert(gGame.bullet)
+	gPhysics.addBody(gGame.rocket, "static")
 
 	gGame.silo = display.newImageRect("gfx/game/silo.png", 245, 69)
 	gGame.silo.x, gGame.silo.y = 100, 100
 	gScreenGroup:insert(gGame.silo)
+	gPhysics.addBody(gGame.silo, "static")
+
+	gGame.bullet = display.newImageRect("gfx/game/items/1.png", 67, 67)
+	gGame.bullet.x, gGame.bullet.y = 100, 100
+	gScreenGroup:insert(gGame.bullet)
+	gPhysics.addBody(gGame.bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
+	gGame.bullet:setLinearVelocity(20, 5)
+
+	gGame.bulletTest = display.newImageRect("gfx/game/items/red.png", 32, 32)
+	gGame.bulletTest.x, gGame.bulletTest.y = 100, 100
+	gScreenGroup:insert(gGame.bulletTest)
+
+	gGame.trajectory = {}
+	for i = 1, 50, 1 do
+		gGame.trajectory[i] = display.newImageRect("gfx/game/items/red.png", 4, 4)
+		gGame.trajectory[i].x, gGame.trajectory[i].y = magic(0.3)
+		gScreenGroup:insert(gGame.trajectory[i])
+	end
+
+	gGame.cannonAngle = 0
+	gGame.turningDirection = 0
 
 	gGame.logicTimer = timer.performWithDelay(1000 / 60, function() return nextFrame() end, 0)
 end

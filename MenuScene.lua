@@ -118,8 +118,6 @@ function gScene:exitScene(event)
 	gBackgroundImg = nil
 	gStartBtn = nil
 	gHTPBtn = nil
-	gFBBtn = nil
-	gGCBtn = nil
 	gSoundBtn = nil
 	gMusicBtn = nil
 
