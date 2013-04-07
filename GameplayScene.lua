@@ -107,8 +107,8 @@ local function sfdsafaRocket()
 	gGame.rocketShadow:removeSelf()
 	gGame.rocketShadow = nil
 
-	gGame.rocketBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
-	gGame.rocketBoom.x, gGame.rocketBoom.y = 420, 210
+	gGame.siloBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
+	gGame.siloBoom.x, gGame.siloBoom.y = 310, 260
 end
 
 local function sfdsafaSilos()
@@ -118,9 +118,8 @@ local function sfdsafaSilos()
 	gPhysics.addBody(gGame.silos, { density = 1, friction = -1, bounce = 1, radius = 20 })
 	gGame.silos:setLinearVelocity(0, -100)
 
-
-	gGame.siloBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
-	gGame.siloBoom.x, gGame.siloBoom.y = 310, 260
+	gGame.rocketBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
+	gGame.rocketBoom.x, gGame.rocketBoom.y = 420, 210
 end
 
 
@@ -276,6 +275,8 @@ local function destroyAllData()
 	gGame.rocket:removeSelf()
 	gGame.silos:removeSelf()
 	gGame.bullet:removeSelf()
+	gGame.siloBoom:removeSelf()
+	gGame.rocketBoom:removeSelf()
 
 
 	gGame.cannonShadow = nil
@@ -284,6 +285,8 @@ local function destroyAllData()
 	gGame.rocket = nil
 	gGame.silos = nil
 	gGame.bullet = nil
+	gGame.siloBoom = nil
+	gGame.rocketBoom = nil
 end
 
 function gScene:createScene(event)
