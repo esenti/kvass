@@ -15,9 +15,9 @@ local gCurrentlyTouchedPoint = {}
 local gTouchingPoints = {}
 
 local trajectories = {
-	--function(t, p) return 2 * p * t, 3.7 * (t^2 - t) end,
-	--function(t, p) return 2 * p * t, 2 * (math.cos(6*t) - 1) / (4*p) end,
-	function(t, p) return t + 0.1*math.sin(30*t-0.5), t^2 - t - 0.1*math.cos(30*t-0.5) end,
+	function(t, p) return 2 * p * t, 3.7 * (t^2 - t) end,
+	function(t, p) return 2 * p * t, 2 * (math.cos(6*t) - 1) / (4*p) end,
+	function(t, p) return t + 0.1*math.sin(60*p*t), t^2 - t - 0.1*math.cos(60*p*t) end,
 	--function(t, p) return t, -t^2 + p * t end
 }
 
@@ -36,7 +36,7 @@ local sizes = {
 
 local function trajectory(fun, time, param)
 	local x, y = trajectories[fun % table.getn(trajectories) + 1](time / 1000, param);
-	return display.contentWidth * 0.18 + x * 50 * param, display.contentHeight * 0.73 + y * display.contentHeight * 0.73
+	return display.contentWidth * 0.18 + x * display.contentWidth, display.contentHeight * 0.73 + y * display.contentHeight * 0.73
 end
 
 local function zonk(event)
@@ -207,7 +207,7 @@ local function nextFrame()
 		gGame.bullId = gGame.bullId + 1
 		gPhysics.addBody(bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
 
-		gGame.param = 1.5
+		gGame.param = 0.1
 	end
 
 	if gGame.turningDirection > 0 then
@@ -330,7 +330,7 @@ function gScene:createScene(event)
 		gScreenGroup:insert(gGame.trajectory[i])
 	end
 
-	gGame.param = 1.5
+	gGame.param = 0.1
 	gGame.turningDirection = 0
 	gGame.bullId = 0
 
