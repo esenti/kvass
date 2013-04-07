@@ -149,6 +149,14 @@ local function hitRocket(dmg)
 		gGame.silos:removeSelf()
 		gGame.silos = nil
 		timer.performWithDelay(1, sfdsafaSilos, 1)
+
+		if gGame.silosLifeImgBack then
+		gGame.silosLifeImgBack:removeSelf()
+		gGame.silosLifeImg:removeSelf()
+		gGame.silosLifeImgBack = nil
+		gGame.silosLifeImg = nil
+	end
+	
 	else
 		gGame.rocketLifeImgBack = display.newRect(390, 120, 60, 10)
 		gGame.rocketLifeImgBack:setFillColor(255, 0, 0)
@@ -171,6 +179,14 @@ local function hitSilos(dmg)
 		gGame.rocket:removeSelf()
 		gGame.rocket = nil
 		timer.performWithDelay(1, sfdsafaRocket, 1)
+
+	if gGame.rocketLifeImgBack then
+		gGame.rocketLifeImgBack:removeSelf()
+		gGame.rocketLifeImg:removeSelf()
+		gGame.rocketLifeImgBack = nil
+		gGame.rocketLifeImg = nil
+	end
+
 	else
 		gGame.silosLifeImgBack = display.newRect(280, 230, 60, 10)
 		gGame.silosLifeImgBack:setFillColor(255, 0, 0)
@@ -192,11 +208,11 @@ local function onCollision(event)
 	end
 	if event.object1 == gGame.silos then
 		event.object2:removeSelf()
-		hitSilos(14)
+		hitSilos(46)
 	end
 	if event.object2 == gGame.silos then
 		event.object1:removeSelf()
-		hitSilos(14)
+		hitSilos(46)
 	end
 end
 
@@ -282,6 +298,20 @@ local function destroyAllData()
 	print("xxx")
 	if not gGame or not gGame.cannon then
 		return
+	end
+
+	if gGame.rocketLifeImgBack then
+		gGame.rocketLifeImgBack:removeSelf()
+		gGame.rocketLifeImg:removeSelf()
+		gGame.rocketLifeImgBack = nil
+		gGame.rocketLifeImg = nil
+	end
+
+	if gGame.silosLifeImgBack then
+		gGame.silosLifeImgBack:removeSelf()
+		gGame.silosLifeImg:removeSelf()
+		gGame.silosLifeImgBack = nil
+		gGame.silosLifeImg = nil
 	end
 	print("ssss")
 	if gGame.cannonShadow then
