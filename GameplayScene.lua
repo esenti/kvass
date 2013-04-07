@@ -16,7 +16,7 @@ local gCurrentlyTouchedPoint = {}
 local gTouchingPoints = {}
 
 
-local function magic(time, param)
+local function magic(fun, time, param)
 	return display.contentWidth / 2 + math.sin(time / 1000) * 50 * param, display.contentHeight / 2 + math.cos(time / 1000) * 50
 end
 
@@ -73,10 +73,11 @@ local function nextFrame()
 	else
 		gGame.timeToNext = 0
 
-		--local bullet = display.newImageRect("gfx/game/items/red.png", 32, 32)
-		--bullet.x, bullet.y, time.start = 100, 100, gGame.time
-		--table.insert(gGame.bullets, bullet)
-		--gScreenGroup:insert(bullet)
+		local bullet = display.newImageRect("gfx/game/items/bullet.png", 32, 32)
+		bullet.x, bullet.y, bullet.start, bullet.fun, bullet.param = 100, 100, gGame.time, gGame.bullId, gGame.param
+		table.insert(gGame.bullets, bullet)
+		gScreenGroup:insert(bullet)
+		gGame.bullId = gGame.bullId + 1
 	end
 
 	if gGame.turningDirection > 0 then
@@ -87,16 +88,16 @@ local function nextFrame()
 	gScoreText.text = gGame.param
 
 	for i = 1, 100, 1 do
-		gGame.trajectory[i].x, gGame.trajectory[i].y = magic((10000 / 100) * i, gGame.param)
+		gGame.trajectory[i].x, gGame.trajectory[i].y = magic(gGame.bullId, (10000 / 100) * i, gGame.param)
 	end
 
-	--for i = 1, #gGame.bullets, 1 do
-	--	gGame.bullets[i].x, gGame.bullets[i].y = magic(gGame.time - gGame.bullets[i].start, gGame.param)
-	--end
+	for i = 1, #gGame.bullets, 1 do
+		gGame.bullets[i].x, gGame.bullets[i].y = magic(gGame.bullets[i].fun, gGame.time - gGame.bullets[i].start, gGame.bullets[i].param)
+	end
 
 	--gGame.cannon.rotation = gGame.cannonAngle
 
-	local xxx, yyy = magic(gGame.time, gGame.param)
+	local xxx, yyy = magic(0, gGame.time, gGame.param)
 	gGame.bulletTest.x = xxx
 	gGame.bulletTest.y = yyy
 	gGame.bulletTest.rotation = 45
@@ -194,7 +195,7 @@ function gScene:createScene(event)
 
 	gGame.param = 0
 	gGame.turningDirection = 0
-
+	gGame.bullId = 1
 
 	gGame.logicTimer = timer.performWithDelay(1000 / 60, function() return nextFrame() end, 0)
 end
