@@ -15,10 +15,10 @@ local gCurrentlyTouchedPoint = {}
 local gTouchingPoints = {}
 
 local trajectories = {
-	--function(t, p) return 2 * p * t, 3.7 * (t^2 - t) end,
-	--function(t, p) return 2 * p * t, 2 * (math.cos(6*t) - 1) / (4*p) end,
+	function(t, p) return 2 * p * t, 3.7 * (t^2 - t) end,
+	function(t, p) return 2 * p * t, 2 * (math.cos(6*t) - 1) / (4*p) end,
 	function(t, p) return t + 0.1*math.sin(30*t-0.5), t^2 - t - 0.1*math.cos(30*t-0.5) end,
-	--function(t, p) return t, -t^2 + p * t end
+	function(t, p) return t, -t^2 + p * t end
 }
 
 local sizes = {
@@ -107,8 +107,8 @@ local function sfdsafaRocket()
 	gGame.rocketShadow:removeSelf()
 	gGame.rocketShadow = nil
 
-	gGame.rocketBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
-	gGame.rocketBoom.x, gGame.rocketBoom.y = 420, 210
+	gGame.siloBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
+	gGame.siloBoom.x, gGame.siloBoom.y = 310, 260
 end
 
 local function sfdsafaSilos()
@@ -118,9 +118,8 @@ local function sfdsafaSilos()
 	gPhysics.addBody(gGame.silos, { density = 1, friction = -1, bounce = 1, radius = 20 })
 	gGame.silos:setLinearVelocity(0, -100)
 
-
-	gGame.siloBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
-	gGame.siloBoom.x, gGame.siloBoom.y = 310, 260
+	gGame.rocketBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
+	gGame.rocketBoom.x, gGame.rocketBoom.y = 420, 210
 end
 
 
