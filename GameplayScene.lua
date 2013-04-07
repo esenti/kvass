@@ -89,7 +89,6 @@ local function onTouch(event)
 
 		if gTouchingPoints[1].y < 20 then
 			jesus()
-			--gStoryboard.gotoScene("MenuScene", "fade", 300)
 		end
 	else
 		gGame.turningDirection = 0
@@ -104,6 +103,9 @@ local function sfdsafaRocket()
 	gScreenGroup:insert(gGame.rocket)
 	gPhysics.addBody(gGame.rocket, { density = 1, friction = -1, bounce = 1, radius = 20 })
 	gGame.rocket:setLinearVelocity(0, -100)
+
+	gGame.rocketShadow:removeSelf()
+	gGame.rocketShadow = nil
 end
 
 local function sfdsafaSilos()
