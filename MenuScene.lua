@@ -126,6 +126,8 @@ function gScene:exitScene(event)
 		gBlackBackgroundRect:removeSelf()
 		gBlackBackgroundRect = nil
 	end
+
+	timer.cancel(gInfoTimer)
 end
 
 function gScene:destroyScene(event)

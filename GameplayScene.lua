@@ -25,6 +25,26 @@ local function trajectory(fun, time, param)
 	return display.contentWidth * 0.18 + x * 50 * param, display.contentHeight * 0.73 + y * display.contentHeight * 0.73
 end
 
+local function zonk(event)
+	if event.phase == "began" then
+		gStoryboard.gotoScene("MenuScene", "fade", 300)
+	end
+
+	return true
+end
+
+local function jesus()
+	gEnd = display.newImageRect("gfx/game/end.png", display.contentWidth, display.contentHeight)
+	gEnd.x, gEnd.y = display.contentWidth / 2,  display.contentHeight / 2
+	gScene.view:insert(gEnd)
+
+	gEnd:addEventListener("touch", zonk)
+
+	return true
+
+end
+
+
 local function onTouch(event)
 	if event.phase == "began" then
 		table.insert(gTouchingPoints, {x = event.x, y = event.y, id = event.id})
@@ -54,7 +74,8 @@ local function onTouch(event)
 		end
 
 		if gTouchingPoints[1].y < 20 then
-			gStoryboard.gotoScene("MenuScene", "fade", 300)
+			jesus()
+			--gStoryboard.gotoScene("MenuScene", "fade", 300)
 		end
 	else
 		gGame.turningDirection = 0
@@ -83,7 +104,7 @@ end
 local function hitRocket(dmg)
 	gGame.rocketLife = gGame.rocketLife - dmg
 
-	if gGame.rocketLifeBack then
+	if gGame.rocketLifeImgBack then
 		gGame.rocketLifeImgBack:removeSelf()
 		gGame.rocketLifeImg:removeSelf()
 		gGame.rocketLifeImgBack = nil
@@ -105,7 +126,7 @@ end
 local function hitSilos(dmg)
 	gGame.silosLife = gGame.silosLife - dmg
 
-	if gGame.silosLifeBack then
+	if gGame.silosLifeImgBack then
 		gGame.silosLifeImgBack:removeSelf()
 		gGame.silosLifeImg:removeSelf()
 		gGame.silosLifeImgBack = nil
@@ -126,7 +147,7 @@ end
 
 local function onCollision(event)
 	if not gGame then return end
-	
+
 	if event.object1 == gGame.rocket then
 		event.object2:removeSelf()
 		hitRocket(40)
@@ -147,7 +168,7 @@ end
 
 local function nextFrame()
 	if (gGame.silos and gGame.silos.y < -100) or (gGame.rocket and gGame.rocket.y < -100) then
-		print("fgsfdg sfdgsfd gdsfg dfs gfdsgsd")
+		jesus()
 	end
 
 	gGame.time = gGame.time + 1000 / 60.0
@@ -164,7 +185,8 @@ local function nextFrame()
 	else
 		gGame.timeToNext = 0
 
-		local bullet = display.newImageRect("gfx/game/items/bullet.png", 32, 32)
+		local iggfdgsd = math.min(7, gGame.bullId)
+		local bullet = display.newImageRect("gfx/game/items/" .. iggfdgsd .. ".png", 32, 32)
 		bullet.x, bullet.y, bullet.start, bullet.fun, bullet.param = 100, 100, gGame.time, gGame.bullId, gGame.param
 		table.insert(gGame.bullets, bullet)
 		gScreenGroup:insert(bullet)
@@ -185,13 +207,18 @@ local function nextFrame()
 
 	for i = 1, #gGame.bullets, 1 do
 		gGame.bullets[i].x, gGame.bullets[i].y = trajectory(gGame.bullets[i].fun, gGame.time - gGame.bullets[i].start, gGame.bullets[i].param)
+		if gGame.bullets[i].rotation ~= nil then
+			gGame.bullets[i].rotation = gGame.bullets[i].rotation + 5
+		end
+		--local x2, y2 = trajectory(gGame.bullets[i].fun, gGame.time - gGame.bullets[i].start + 0.0000001, gGame.bullets[i].param)
+		--gGame.bullets[i].rotation = math.atan2(y2 - gGame.bullets[i].y, x2 - gGame.bullets[i].x) * 180 / math.pi
 	end
 
-	local x, y = trajectory(0, gGame.time, gGame.param)
-	gGame.bulletTest.x = x
-	gGame.bulletTest.y = y
-	local x2, y2 = trajectory(0, gGame.time + 0.0000001, gGame.param)
-	gGame.bulletTest.rotation = math.atan2(y2 - y, x2 - x) * 180 / math.pi
+	--local x, y = trajectory(0, gGame.time, gGame.param)
+	--gGame.bulletTest.x = x
+	--gGame.bulletTest.y = y
+	--local x2, y2 = trajectory(0, gGame.time + 0.0000001, gGame.param)
+	--gGame.bulletTest.rotation = math.atan2(y2 - y, x2 - x) * 180 / math.pi
 
 	return true
 end
@@ -207,6 +234,7 @@ local function destroyAllData()
 	gGame.rocket:removeSelf()
 	gGame.silos:removeSelf()
 	gGame.bullet:removeSelf()
+
 
 	gGame.cannonShadow = nil
 	gGame.cannon = nil
@@ -273,12 +301,12 @@ function gScene:createScene(event)
 	gScreenGroup:insert(gGame.anotherSilo)
 	gPhysics.addBody(gGame.anotherSilo, "static")
 
-	gGame.bullet = display.newImageRect("gfx/game/items/mcpixel.png", 18 / 2, 84 / 2)
-	gGame.bullet.x, gGame.bullet.y = 100, 100
-	gGame.bullet.rotation = 90
-	gScreenGroup:insert(gGame.bullet)
-	gPhysics.addBody(gGame.bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
-	gGame.bullet:setLinearVelocity(0, -100)
+	--gGame.bullet = display.newImageRect("gfx/game/items/mcpixel.png", 18 / 2, 84 / 2)
+	--gGame.bullet.x, gGame.bullet.y = 100, 100
+	--gGame.bullet.rotation = 90
+	--gScreenGroup:insert(gGame.bullet)
+	--gPhysics.addBody(gGame.bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
+	--gGame.bullet:setLinearVelocity(0, -100)
 
 
 	gGame.bulletTest = display.newImageRect("gfx/game/items/red.png", 32, 32)
