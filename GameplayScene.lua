@@ -14,9 +14,15 @@ local gScreenGroup
 local gCurrentlyTouchedPoint = {}
 local gTouchingPoints = {}
 
+local trajectories = {
+	function(t, p) return -p * t, 3.7 * (t^2 - t) end,
+	function(t, p) return p * t, 3.7 * (t^2 - t) end,
+	--function(t, p) return t, -t^2 + p * t end
+}
 
-local function magic(fun, time, param)
-	return display.contentWidth / 2 + math.sin(time / 1000) * 50 * param, display.contentHeight / 2 + math.cos(time / 1000) * 50 * param
+local function trajectory(fun, time, param)
+	local x, y = trajectories[fun % table.getn(trajectories) + 1](time / 1000, param);
+	return display.contentWidth * 0.22 + x * 50 * param, display.contentHeight * 0.65 + y * display.contentHeight * 0.65
 end
 
 local function zonk(event)
@@ -195,17 +201,17 @@ local function nextFrame()
 	gScoreText.text = gGame.param
 
 	for i = 1, 100, 1 do
-		gGame.trajectory[i].x, gGame.trajectory[i].y = magic(gGame.bullId, (10000 / 100) * i, gGame.param)
+		gGame.trajectory[i].x, gGame.trajectory[i].y = trajectory(gGame.bullId, (10000 / 100) * i, gGame.param)
 	end
 
 	for i = 1, #gGame.bullets, 1 do
-		gGame.bullets[i].x, gGame.bullets[i].y = magic(gGame.bullets[i].fun, gGame.time - gGame.bullets[i].start, gGame.bullets[i].param)
+		gGame.bullets[i].x, gGame.bullets[i].y = trajectory(gGame.bullets[i].fun, gGame.time - gGame.bullets[i].start, gGame.bullets[i].param)
 	end
 
-	local x, y = magic(0, gGame.time, gGame.param)
+	local x, y = trajectory(0, gGame.time, gGame.param)
 	gGame.bulletTest.x = x
 	gGame.bulletTest.y = y
-	local x2, y2 = magic(0, gGame.time + 0.0000001, gGame.param)
+	local x2, y2 = trajectory(0, gGame.time + 0.0000001, gGame.param)
 	gGame.bulletTest.rotation = math.atan2(y2 - y, x2 - x) * 180 / math.pi
 
 	return true
