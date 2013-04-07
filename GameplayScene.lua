@@ -58,20 +58,21 @@ local function onTouch(event)
 end
 
 local function sfdsafaRocket()
-	gGame.rocket = display.newImageRect("gfx/game/rocket.png", 76, 134)
-	gGame.rocket.x, gGame.rocket.y = 420, 200
+	gGame.rocket = display.newImageRect("gfx/game/rocket.png", 76 / 2, 134 / 2)
+	gGame.rocket.x, gGame.rocket.y = 420, 210
 	gScreenGroup:insert(gGame.rocket)
 	gPhysics.addBody(gGame.rocket, { density = 1, friction = -1, bounce = 1, radius = 20 })
 	gGame.rocket:setLinearVelocity(0, -100)
 end
 
 local function sfdsafaSilos()
-	gGame.silos = display.newImageRect("gfx/game/silo.png", 86, 24)
+	gGame.silos = display.newImageRect("gfx/game/rocket.png", 76 / 2, 134 / 2)
 	gGame.silos.x, gGame.silos.y = 310, 260
 	gScreenGroup:insert(gGame.silos)
 	gPhysics.addBody(gGame.silos, { density = 1, friction = -1, bounce = 1, radius = 20 })
 	gGame.silos:setLinearVelocity(0, -100)
 end
+
 
 local function hitRocket(dmg)
 	gGame.rocketLife = gGame.rocketLife - dmg
@@ -139,6 +140,10 @@ local function onCollision(event)
 end
 
 local function nextFrame()
+	if (gGame.silos and gGame.silos.y < -100) or (gGame.rocket and gGame.rocket.y < -100) then
+		print("fgsfdg sfdgsfd gdsfg dfs gfdsgsd")
+	end
+
 	gGame.time = gGame.time + 1000 / 60.0
 	gGame.timeToNext = gGame.timeToNext + 1000 / 60.0
 
@@ -252,10 +257,10 @@ function gScene:createScene(event)
 	gScreenGroup:insert(gGame.rocket)
 	gPhysics.addBody(gGame.rocket, "static")
 
-	gGame.silo = display.newImageRect("gfx/game/silo.png", 86 / 2, 24 / 2)
-	gGame.silo.x, gGame.silo.y = 310, 260
-	gScreenGroup:insert(gGame.silo)
-	gPhysics.addBody(gGame.silo, "static")
+	gGame.silos = display.newImageRect("gfx/game/silo.png", 86 / 2, 24 / 2)
+	gGame.silos.x, gGame.silos.y = 310, 260
+	gScreenGroup:insert(gGame.silos)
+	gPhysics.addBody(gGame.silos, "static")
 
 	gGame.anotherSilo = display.newImageRect("gfx/game/silo.png", 86 / 2, 24 / 2)
 	gGame.anotherSilo.x, gGame.anotherSilo.y = 360, 235
