@@ -1,5 +1,4 @@
 local gStoryboard = require("storyboard")
-local gButtonsManager  = require("ButtonsManager")
 local gScene = gStoryboard.newScene()
 local gPhysics = require("physics")
 gPhysics.start()
@@ -87,7 +86,7 @@ local function hitRocket(dmg)
 	if gGame.rocketLife < 0 then
 		gGame.rocket:removeSelf()
 		gGame.rocket = nil
-		timer.performWithDelay(1, sfdsafaRocket, 1) 
+		timer.performWithDelay(1, sfdsafaRocket, 1)
 	else
 		gGame.rocketLifeImgBack = display.newRect(390, 120, 60, 10)
 		gGame.rocketLifeImgBack:setFillColor(255, 0, 0)
@@ -109,7 +108,7 @@ local function hitSilos(dmg)
 	if gGame.silosLife < 0 then
 		gGame.silos:removeSelf()
 		gGame.silos = nil
-		timer.performWithDelay(1, sfdsafaSilos, 1) 
+		timer.performWithDelay(1, sfdsafaSilos, 1)
 	else
 		gGame.silosLifeImgBack = display.newRect(280, 230, 60, 10)
 		gGame.silosLifeImgBack:setFillColor(255, 0, 0)
@@ -234,31 +233,36 @@ function gScene:createScene(event)
 	gGame.time = 0
 	gGame.timeToNext = 0
 
-	gGame.cannonShadow = display.newImageRect("gfx/game/cannon_shadow.png", 169, 95)
-	gGame.cannonShadow.x, gGame.cannonShadow.y = 70, display.contentHeight - 138/2
+	gGame.cannonShadow = display.newImageRect("gfx/game/cannon_shadow.png", 169 / 2, 95 / 2)
+	gGame.cannonShadow.x, gGame.cannonShadow.y = 70, display.contentHeight - 138/2 + 10
 	gScreenGroup:insert(gGame.cannonShadow)
 
-	gGame.cannon = display.newImageRect("gfx/game/cannon.png", 100, 76)
-	gGame.cannon.x, gGame.cannon.y = 60, display.contentHeight - 138/2 - 10
+	gGame.cannon = display.newImageRect("gfx/game/cannon.png", 100 / 2, 76 / 2)
+	gGame.cannon.x, gGame.cannon.y = 60, display.contentHeight - 138/2
 	gScreenGroup:insert(gGame.cannon)
 	gPhysics.addBody(gGame.cannon, "static")
 
 
-	gGame.rocketShadow = display.newImageRect("gfx/game/rocket_shadow.png", 153, 100)
-	gGame.rocketShadow.x, gGame.rocketShadow.y = 458, 226
+	gGame.rocketShadow = display.newImageRect("gfx/game/rocket_shadow.png", 153 / 2, 100 / 2)
+	gGame.rocketShadow.x, gGame.rocketShadow.y = 445, 220
 	gScreenGroup:insert(gGame.rocketShadow)
 
-	gGame.rocket = display.newImageRect("gfx/game/rocket.png", 76, 134)
-	gGame.rocket.x, gGame.rocket.y = 420, 200
+	gGame.rocket = display.newImageRect("gfx/game/rocket.png", 76 / 2, 134 / 2)
+	gGame.rocket.x, gGame.rocket.y = 420, 210
 	gScreenGroup:insert(gGame.rocket)
 	gPhysics.addBody(gGame.rocket, "static")
 
-	gGame.silos = display.newImageRect("gfx/game/silo.png", 86, 24)
-	gGame.silos.x, gGame.silos.y = 310, 260
-	gScreenGroup:insert(gGame.silos)
-	gPhysics.addBody(gGame.silos, "static")
+	gGame.silo = display.newImageRect("gfx/game/silo.png", 86 / 2, 24 / 2)
+	gGame.silo.x, gGame.silo.y = 310, 260
+	gScreenGroup:insert(gGame.silo)
+	gPhysics.addBody(gGame.silo, "static")
 
-	gGame.bullet = display.newImageRect("gfx/game/items/bullet.png", 38, 55)
+	gGame.anotherSilo = display.newImageRect("gfx/game/silo.png", 86 / 2, 24 / 2)
+	gGame.anotherSilo.x, gGame.anotherSilo.y = 360, 235
+	gScreenGroup:insert(gGame.anotherSilo)
+	gPhysics.addBody(gGame.anotherSilo, "static")
+
+	gGame.bullet = display.newImageRect("gfx/game/items/mcpixel.png", 18 / 2, 84 / 2)
 	gGame.bullet.x, gGame.bullet.y = 100, 100
 	gGame.bullet.rotation = 90
 	gScreenGroup:insert(gGame.bullet)
