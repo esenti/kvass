@@ -190,6 +190,23 @@ local function nextFrame()
 	gGame.time = gGame.time + 1000 / 60.0
 	gGame.timeToNext = gGame.timeToNext + 1000 / 60.0
 
+	gScoreText.text = 20 - math.round(gGame.time / 1000)
+	if gGame.time > 20000 then
+		if gGame.silosLife > 0 then
+			gGame.rocket:removeSelf()
+			gGame.rocket = nil
+			timer.performWithDelay(1, sfdsafaRocket, 1)
+			gGame.silosLife = 0
+		end
+
+		if gGame.rocketLife > 0 then
+			gGame.silos:removeSelf()
+			gGame.silos = nil
+			timer.performWithDelay(1, sfdsafaSilos, 1)
+			gGame.rocketLife = 0
+		end
+	end
+
 	if gGame.timeToNext < 500 then
 		gPowerupText.text = "3"
 	elseif gGame.timeToNext < 1000 then
@@ -217,7 +234,7 @@ local function nextFrame()
 	elseif gGame.turningDirection < 0 then
 		gGame.param = gGame.param - 0.01
 	end
-	gScoreText.text = gGame.param
+	--gScoreText.text = gGame.param
 
 	for i = 1, 100, 1 do
 		gGame.trajectory[i].x, gGame.trajectory[i].y = trajectory(gGame.bullId, (2000 / 100) * (i-1), gGame.param)
