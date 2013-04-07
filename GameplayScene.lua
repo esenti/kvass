@@ -106,6 +106,9 @@ local function sfdsafaRocket()
 
 	gGame.rocketShadow:removeSelf()
 	gGame.rocketShadow = nil
+
+	gGame.rocketBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
+	gGame.rocketBoom.x, gGame.rocketBoom.y = 420, 210
 end
 
 local function sfdsafaSilos()
@@ -114,6 +117,10 @@ local function sfdsafaSilos()
 	gScreenGroup:insert(gGame.silos)
 	gPhysics.addBody(gGame.silos, { density = 1, friction = -1, bounce = 1, radius = 20 })
 	gGame.silos:setLinearVelocity(0, -100)
+
+
+	gGame.siloBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
+	gGame.siloBoom.x, gGame.siloBoom.y = 310, 260
 end
 
 
