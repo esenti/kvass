@@ -40,7 +40,7 @@ local function onTouch(event)
 			gStoryboard.gotoScene("MenuScene", "fade", 300)
 		end
 	else
-		gGame.player.turningDirection = 0
+		--gGame.player.turningDirection = 0
     end
 
 	return true
@@ -49,9 +49,10 @@ end
 local function nextFrame()
 	gGame.time = gGame.time + 1000 / 60.0
 
-	gGame.player.x = display.contentWidth / 2 - math.sin(gGame.time / 1000) * 200
-	gGame.player.y = display.contentHeight / 2 + math.cos(gGame.time / 1000) * 200
-	gGame.player:setFillColor(255, (math.sin(gGame.time / 10000) + 1) * 128, 0)
+	print("message")
+	gGame.bullet.x = display.contentWidth / 2 - math.sin(gGame.time / 1000) * 200
+	gGame.bullet.y = display.contentHeight / 2 + math.cos(gGame.time / 1000) * 200
+	gGame.bullet:setFillColor(255, (math.sin(gGame.time / 10000) + 1) * 128, 0)
 
 	gScoreText.text = math.round(gGame.time / 1000)
 	gPowerupText.text = 100 - math.round(gGame.time / 1000)
@@ -64,8 +65,12 @@ local function destroyAllData()
 	if not gGame then
 		return
 	end
-	gGame.player:removeSelf()
-	gGame.player = nil
+	gGame.cannon:removeSelf()
+	gGame.cannon = nil
+	gGame.rocket:removeSelf()
+	gGame.rocket = nil
+	gGame.bullet:removeSelf()
+	gGame.bullet = nil
 end
 
 function gScene:createScene(event)
@@ -74,6 +79,8 @@ function gScene:createScene(event)
 
 	gScreenGroup = self.view
 
+	print(display.contentWidth)
+	print(display.contentHeight)
 	gBackground = display.newImageRect("gfx/game/background.png", display.contentWidth, display.contentHeight)
 	gBackground.x, gBackground.y = display.contentWidth / 2,  display.contentHeight / 2
 	gScreenGroup:insert(gBackground)
@@ -95,10 +102,22 @@ function gScene:createScene(event)
 	gGame.points = 0
 	gGame.time = 0
 
-	gGame.player = display.newImageRect("gfx/game/cannon.png", 67, 67)
-	gGame.player.x, gGame.player.y = 100, 100
-	gScreenGroup:insert(gGame.player)
+	gGame.cannon = display.newImageRect("gfx/game/cannon.png", 181, 138)
+	gGame.cannon.x, gGame.cannon.y = 100, display.contentHeight - 138/2
+	gScreenGroup:insert(gGame.cannon)
+
+	gGame.rocket = display.newImageRect("gfx/game/rocket.png", 211, 371)
+	gGame.rocket.x, gGame.rocket.y = 100, 100
+	gScreenGroup:insert(gGame.rocket)
 	
+	gGame.bullet = display.newImageRect("gfx/game/items/1.png", 67, 67)
+	gGame.bullet.x, gGame.bullet.y = 100, 100
+	gScreenGroup:insert(gGame.bullet)
+
+	gGame.silo = display.newImageRect("gfx/game/silo.png", 245, 69)
+	gGame.silo.x, gGame.silo.y = 100, 100
+	gScreenGroup:insert(gGame.silo)
+
 	gGame.logicTimer = timer.performWithDelay(1000 / 60, function() return nextFrame() end, 0)
 end
 
