@@ -1,5 +1,4 @@
 local gStoryboard = require("storyboard")
-local gButtonsManager  = require("ButtonsManager")
 local gScene = gStoryboard.newScene()
 local gPhysics = require("physics")
 gPhysics.start()
@@ -174,7 +173,7 @@ function gScene:createScene(event)
 	gScreenGroup:insert(gGame.anotherSilo)
 	gPhysics.addBody(gGame.anotherSilo, "static")
 
-	gGame.bullet = display.newImageRect("gfx/game/items/bullet.png", 38 / 2, 55 / 2)
+	gGame.bullet = display.newImageRect("gfx/game/items/mcpixel.png", 18 / 2, 84 / 2)
 	gGame.bullet.x, gGame.bullet.y = 100, 100
 	gGame.bullet.rotation = 90
 	gScreenGroup:insert(gGame.bullet)

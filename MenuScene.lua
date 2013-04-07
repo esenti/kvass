@@ -1,13 +1,8 @@
 local gStoryboard = require("storyboard")
-local gButtonsManager  = require("ButtonsManager")
 local gScene = gStoryboard.newScene()
 
 local gBackgroundImg
 local gBlackBackgroundRect
-local gStartBtn
-local gHTPBtn
-local gSoundBtn
-local gMusicBtn
 
 local gHTPBackBtn
 local gHTPImg
