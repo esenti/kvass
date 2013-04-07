@@ -17,8 +17,8 @@ local gTouchingPoints = {}
 local trajectories = {
 	function(t, p) return 2 * p * t, 3.7 * (t^2 - t) end,
 	function(t, p) return 2 * p * t, 2 * (math.cos(6*t) - 1) / (4*p) end,
-	function(t, p) return t + 0.1*math.sin(30*t-0.5), t^2 - t - 0.1*math.cos(30*t-0.5) end,
-	function(t, p) return t, -t^2 + p * t end
+	function(t, p) return t + 0.1*math.sin(60*p*t), t^2 - t - 0.1*math.cos(60*p*t) end,
+	--function(t, p) return t, -t^2 + p * t end
 }
 
 local sizes = {
@@ -36,7 +36,7 @@ local sizes = {
 
 local function trajectory(fun, time, param)
 	local x, y = trajectories[fun % table.getn(trajectories) + 1](time / 1000, param);
-	return display.contentWidth * 0.18 + x * 50 * param, display.contentHeight * 0.73 + y * display.contentHeight * 0.73
+	return display.contentWidth * 0.18 + x * display.contentWidth, display.contentHeight * 0.73 + y * display.contentHeight * 0.73
 end
 
 local function zonk(event)
@@ -196,6 +196,23 @@ local function nextFrame()
 	gGame.time = gGame.time + 1000 / 60.0
 	gGame.timeToNext = gGame.timeToNext + 1000 / 60.0
 
+	gScoreText.text = 20 - math.round(gGame.time / 1000)
+	if gGame.time > 20000 then
+		if gGame.silosLife > 0 then
+			gGame.rocket:removeSelf()
+			gGame.rocket = nil
+			timer.performWithDelay(1, sfdsafaRocket, 1)
+			gGame.silosLife = 0
+		end
+
+		if gGame.rocketLife > 0 then
+			gGame.silos:removeSelf()
+			gGame.silos = nil
+			timer.performWithDelay(1, sfdsafaSilos, 1)
+			gGame.rocketLife = 0
+		end
+	end
+
 	if gGame.timeToNext < 500 then
 		gPowerupText.text = "3"
 	elseif gGame.timeToNext < 1000 then
@@ -215,7 +232,7 @@ local function nextFrame()
 		gGame.bullId = gGame.bullId + 1
 		gPhysics.addBody(bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
 
-		gGame.param = 1.5
+		gGame.param = 0.1
 	end
 
 	if gGame.turningDirection > 0 then
@@ -223,7 +240,7 @@ local function nextFrame()
 	elseif gGame.turningDirection < 0 then
 		gGame.param = gGame.param - 0.01
 	end
-	gScoreText.text = gGame.param
+	--gScoreText.text = gGame.param
 
 	for i = 1, 100, 1 do
 		gGame.trajectory[i].x, gGame.trajectory[i].y = trajectory(gGame.bullId, (2000 / 100) * (i-1), gGame.param)
@@ -338,7 +355,7 @@ function gScene:createScene(event)
 		gScreenGroup:insert(gGame.trajectory[i])
 	end
 
-	gGame.param = 1.5
+	gGame.param = 0.1
 	gGame.turningDirection = 0
 	gGame.bullId = 0
 
