@@ -16,8 +16,8 @@ local gCurrentlyTouchedPoint = {}
 local gTouchingPoints = {}
 
 
-local function magic(time)
-	return display.contentWidth / 2 + math.sin(gGame.time / 1000) * 50, display.contentHeight / 2 + math.cos(gGame.time / 1000) * 50
+local function magic(time, param)
+	return display.contentWidth / 2 + math.sin(time / 1000) * 50 * param, display.contentHeight / 2 + math.cos(time / 1000) * 50
 end
 
 local function onTouch(event)
@@ -62,18 +62,23 @@ local function nextFrame()
 	gGame.time = gGame.time + 1000 / 60.0
 
 	if gGame.turningDirection > 0 then
-		gGame.cannonAngle = gGame.cannonAngle - 1
+		gGame.param = gGame.param + 0.01
 	elseif gGame.turningDirection < 0 then
-		gGame.cannonAngle = gGame.cannonAngle + 1
+		gGame.param = gGame.param - 0.01
+	end
+	gScoreText.text = gGame.param
+
+	for i = 1, 100, 1 do
+		gGame.trajectory[i].x, gGame.trajectory[i].y = magic((10000 / 100) * i, gGame.param)
 	end
 
-	gGame.cannon.rotation = gGame.cannonAngle
+	--gGame.cannon.rotation = gGame.cannonAngle
 
-	local xxx, yyy = magic(time)
+	local xxx, yyy = magic(gGame.time, gGame.param)
 	gGame.bulletTest.x = xxx
 	gGame.bulletTest.y = yyy
+	gGame.bulletTest.rotation = 45
 
-	gScoreText.text = math.round(gGame.time / 1000)
 	gPowerupText.text = 100 - math.round(gGame.time / 1000)
 
 	return true
@@ -146,14 +151,14 @@ function gScene:createScene(event)
 	gScreenGroup:insert(gGame.bulletTest)
 
 	gGame.trajectory = {}
-	for i = 1, 50, 1 do
+	for i = 1, 100, 1 do
 		gGame.trajectory[i] = display.newImageRect("gfx/game/items/red.png", 4, 4)
-		gGame.trajectory[i].x, gGame.trajectory[i].y = magic(0.3)
 		gScreenGroup:insert(gGame.trajectory[i])
 	end
 
-	gGame.cannonAngle = 0
+	gGame.param = 0
 	gGame.turningDirection = 0
+
 
 	gGame.logicTimer = timer.performWithDelay(1000 / 60, function() return nextFrame() end, 0)
 end
