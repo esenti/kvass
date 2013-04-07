@@ -58,6 +58,12 @@ local function onTouch(event)
 	return true
 end
 
+local function onCollision(event)
+	for i = 1, #gGame.bullets, 1 do
+		
+	end
+end
+
 local function nextFrame()
 	gGame.time = gGame.time + 1000 / 60.0
 	gGame.timeToNext = gGame.timeToNext + 1000 / 60.0
@@ -78,6 +84,7 @@ local function nextFrame()
 		table.insert(gGame.bullets, bullet)
 		gScreenGroup:insert(bullet)
 		gGame.bullId = gGame.bullId + 1
+		gPhysics.addBody(bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
 	end
 
 	if gGame.turningDirection > 0 then
@@ -198,6 +205,7 @@ end
 function gScene:enterScene(event)
 	gStoryboard.purgeScene("MenuScene")
 	Runtime:addEventListener("touch", onTouch)
+	Runtime:addEventListener("collision", onCollision)
 end
 
 function gScene:exitScene(event)
@@ -207,6 +215,7 @@ function gScene:exitScene(event)
 	end
 
 	Runtime:removeEventListener("touch", onTouch)
+	Runtime:removeEventListener("collision", onCollision)
 
 	destroyAllData()
 	gBackground:removeSelf()
