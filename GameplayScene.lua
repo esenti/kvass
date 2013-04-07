@@ -98,7 +98,7 @@ end
 local function hitRocket(dmg)
 	gGame.rocketLife = gGame.rocketLife - dmg
 
-	if gGame.rocketLifeBack then
+	if gGame.rocketLifeImgBack then
 		gGame.rocketLifeImgBack:removeSelf()
 		gGame.rocketLifeImg:removeSelf()
 		gGame.rocketLifeImgBack = nil
