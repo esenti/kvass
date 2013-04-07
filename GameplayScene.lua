@@ -22,6 +22,15 @@ local trajectories = {
 
 local sizes = {
 	{w=38, h=55},
+	{w=18, h=54},
+	{w=38, h=55},
+	{w=38, h=55},
+	{w=72, h=64},
+	{w=50, h=58},
+	{w=18, h=84},
+	{w=100, h=72},
+	{w=64, h=64},
+	{w=72, h=134},
 }
 
 local function trajectory(fun, time, param)
@@ -189,8 +198,8 @@ local function nextFrame()
 	else
 		gGame.timeToNext = 0
 
-		local iggfdgsd = math.min(7, gGame.bullId)
-		local bullet = display.newImageRect("gfx/game/items/" .. iggfdgsd .. ".png", 32, 32)
+		local iggfdgsd = math.min(9, gGame.bullId)
+		local bullet = display.newImageRect("gfx/game/items/" .. iggfdgsd .. ".png", sizes[iggfdgsd + 1].w / 2, sizes[iggfdgsd + 1].h / 2)
 		bullet.x, bullet.y, bullet.start, bullet.fun, bullet.param = 100, 100, gGame.time, gGame.bullId, gGame.param
 		table.insert(gGame.bullets, bullet)
 		gScreenGroup:insert(bullet)
@@ -305,14 +314,6 @@ function gScene:createScene(event)
 	gScreenGroup:insert(gGame.anotherSilo)
 	gPhysics.addBody(gGame.anotherSilo, "static")
 
-	--gGame.bullet = display.newImageRect("gfx/game/items/mcpixel.png", 18 / 2, 84 / 2)
-	--gGame.bullet.x, gGame.bullet.y = 100, 100
-	--gGame.bullet.rotation = 90
-	--gScreenGroup:insert(gGame.bullet)
-	--gPhysics.addBody(gGame.bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
-	--gGame.bullet:setLinearVelocity(0, -100)
-
-
 	gGame.bulletTest = display.newImageRect("gfx/game/items/red.png", 32, 32)
 	gGame.bulletTest.x, gGame.bulletTest.y = 100, 100
 	gScreenGroup:insert(gGame.bulletTest)
@@ -324,7 +325,8 @@ function gScene:createScene(event)
 
 	gGame.trajectory = {}
 	for i = 1, 100, 1 do
-		gGame.trajectory[i] = display.newImageRect("gfx/game/marker.png", 4, 4)
+		gGame.trajectory[i] = display.newImageRect("gfx/game/marker.png", 2, 2)
+		gGame.trajectory[i].alpha = 0.7
 		gScreenGroup:insert(gGame.trajectory[i])
 	end
 

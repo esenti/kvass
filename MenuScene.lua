@@ -85,11 +85,6 @@ function gScene:createScene(event)
 	gBackgroundImg = display.newImageRect("gfx/menu/title.png", 568, 320)
 	gBackgroundImg.x, gBackgroundImg.y = display.contentWidth / 2, display.contentHeight / 2
 
-	-- Buttons
-	--gStartBtn = gButtonsManager.new("gfx/menu/start", 153, 85, startGameBtnClicked, _G.sound.button, display.contentWidth/2, display.contentHeight - 85 / 2)
-	--gHTPBtn = gButtonsManager.new("gfx/menu/htp", 75, 70, howToPlayBtnClicked, _G.sound.button, 25, 25)
-	--gSoundBtn = gButtonsManager.new("gfx/menu/sound_"..toOnOff(_G.userData.isSound), 75, 70, soundBtnClicked, _G.sound.button, display.contentWidth - 72.5, display.contentHeight - 25)
-	--gMusicBtn = gButtonsManager.new("gfx/menu/music_"..toOnOff(_G.userData.isMusic), 75, 70, musicBtnClicked, _G.sound.button, display.contentWidth - 25, display.contentHeight - 25)
 
 	gStartInfo = display.newImageRect("gfx/menu/tap.png", 261, 36)
 	gStartInfo.x, gStartInfo.y = display.contentCenterX, 270
