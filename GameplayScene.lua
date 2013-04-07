@@ -104,11 +104,15 @@ local function sfdsafaRocket()
 	gPhysics.addBody(gGame.rocket, { density = 1, friction = -1, bounce = 1, radius = 20 })
 	gGame.rocket:setLinearVelocity(0, -100)
 
-	gGame.rocketShadow:removeSelf()
-	gGame.rocketShadow = nil
+	if gGame.rocketShadow ~= nil then
+		gGame.rocketShadow:removeSelf()
+		gGame.rocketShadow = nil
+	end
 
-	gGame.siloBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
-	gGame.siloBoom.x, gGame.siloBoom.y = 310, 260
+	if not gGame.siloBoom then
+		gGame.siloBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
+		gGame.siloBoom.x, gGame.siloBoom.y = 310, 260
+	end
 end
 
 local function sfdsafaSilos()
@@ -118,8 +122,10 @@ local function sfdsafaSilos()
 	gPhysics.addBody(gGame.silos, { density = 1, friction = -1, bounce = 1, radius = 20 })
 	gGame.silos:setLinearVelocity(0, -100)
 
-	gGame.rocketBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
-	gGame.rocketBoom.x, gGame.rocketBoom.y = 420, 210
+	if not gGame.rocketBoom then
+		gGame.rocketBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
+		gGame.rocketBoom.x, gGame.rocketBoom.y = 420, 210
+	end
 end
 
 
@@ -172,19 +178,19 @@ local function onCollision(event)
 
 	if event.object1 == gGame.rocket then
 		event.object2:removeSelf()
-		hitRocket(40)
+		hitRocket(15)
 	end
 	if event.object2 == gGame.rocket then
 		event.object1:removeSelf()
-		hitRocket(40)
+		hitRocket(15)
 	end
 	if event.object1 == gGame.silos then
 		event.object2:removeSelf()
-		hitSilos(40)
+		hitSilos(15)
 	end
 	if event.object2 == gGame.silos then
 		event.object1:removeSelf()
-		hitSilos(40)
+		hitSilos(15)
 	end
 end
 
@@ -265,18 +271,29 @@ local function nextFrame()
 end
 
 local function destroyAllData()
-	if not gGame or gGame.silos then
+	print("xxx")
+	if not gGame or not gGame.cannon then
 		return
 	end
-
-	gGame.cannonShadow:removeSelf()
+	print("ssss")
+	if gGame.cannonShadow then
+		gGame.cannonShadow:removeSelf()
+	end
 	gGame.cannon:removeSelf()
+	if gGame.rocketShadow then
 	gGame.rocketShadow:removeSelf()
+end
 	gGame.rocket:removeSelf()
 	gGame.silos:removeSelf()
-	gGame.bullet:removeSelf()
+
+	if gGame.siloBoom then
 	gGame.siloBoom:removeSelf()
+end
+
+	if gGame.rocketBoom then
+
 	gGame.rocketBoom:removeSelf()
+end
 
 
 	gGame.cannonShadow = nil
@@ -284,7 +301,6 @@ local function destroyAllData()
 	gGame.rocketShadow = nil
 	gGame.rocket = nil
 	gGame.silos = nil
-	gGame.bullet = nil
 	gGame.siloBoom = nil
 	gGame.rocketBoom = nil
 end
@@ -299,8 +315,9 @@ function gScene:createScene(event)
 	gBackground.x, gBackground.y = display.contentWidth / 2,  display.contentHeight / 2
 	gScreenGroup:insert(gBackground)
 
-	gScoreText = display.newText("0", 0, 0, "Good Times Rg", 20)
-	gScoreText.x, gScoreText.y = 156 / 2, 47 / 2
+	gScoreText = display.newText("0", 0, 0, "Good Times Rg", 50)
+	gScoreText:setTextColor(255, 255, 255, 128)
+	gScoreText.x, gScoreText.y = 430, 47 / 2
 	gScreenGroup:insert(gScoreText)
 
 	gPowerupText = display.newText("", 0, 0, "Good Times Rg", 96)

@@ -14,8 +14,8 @@ local init
 
 function init()
 	_G.userData = {}
-	_G.userData.isMusic = false
-	_G.userData.isSound = false
+	_G.userData.isMusic = true
+	_G.userData.isSound = true
 
 	_G.sound = {}
 	_G.sound.collect = audio.loadSound("audio/collect.wav")
