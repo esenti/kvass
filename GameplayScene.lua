@@ -275,6 +275,8 @@ local function destroyAllData()
 	gGame.rocket:removeSelf()
 	gGame.silos:removeSelf()
 	gGame.bullet:removeSelf()
+	gGame.siloBoom:removeSelf()
+	gGame.rocketBoom:removeSelf()
 
 
 	gGame.cannonShadow = nil
@@ -283,6 +285,8 @@ local function destroyAllData()
 	gGame.rocket = nil
 	gGame.silos = nil
 	gGame.bullet = nil
+	gGame.siloBoom = nil
+	gGame.rocketBoom = nil
 end
 
 function gScene:createScene(event)
