@@ -103,11 +103,12 @@ local function nextFrame()
 	end
 
 	--gGame.cannon.rotation = gGame.cannonAngle
-
-	local xxx, yyy = magic(0, gGame.time, gGame.param)
-	gGame.bulletTest.x = xxx
-	gGame.bulletTest.y = yyy
-	gGame.bulletTest.rotation = 45
+	
+	local x, y = magic(gGame.time, gGame.param)
+	gGame.bulletTest.x = x
+	gGame.bulletTest.y = y
+	local x2, y2 = magic(gGame.time + 0.0000001, gGame.param)
+	gGame.bulletTest.rotation = math.atan2(y2 - y, x2 - x) * 180 / math.pi
 
 	return true
 end
