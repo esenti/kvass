@@ -3,7 +3,7 @@ local gButtonsManager  = require("ButtonsManager")
 local gScene = gStoryboard.newScene()
 local gPhysics = require("physics")
 gPhysics.start()
-gPhysics.setGravity(0, 10)
+gPhysics.setGravity(0, 0)
 
 local gBackgroundImg = {}
 local gScoreText
@@ -59,9 +59,7 @@ local function onTouch(event)
 end
 
 local function onCollision(event)
-	for i = 1, #gGame.bullets, 1 do
-		
-	end
+	print("message")
 end
 
 local function nextFrame()
@@ -102,12 +100,10 @@ local function nextFrame()
 		gGame.bullets[i].x, gGame.bullets[i].y = magic(gGame.bullets[i].fun, gGame.time - gGame.bullets[i].start, gGame.bullets[i].param)
 	end
 
-	--gGame.cannon.rotation = gGame.cannonAngle
-	
-	local x, y = magic(gGame.time, gGame.param)
+	local x, y = magic(0, gGame.time, gGame.param)
 	gGame.bulletTest.x = x
 	gGame.bulletTest.y = y
-	local x2, y2 = magic(gGame.time + 0.0000001, gGame.param)
+	local x2, y2 = magic(0, gGame.time + 0.0000001, gGame.param)
 	gGame.bulletTest.rotation = math.atan2(y2 - y, x2 - x) * 180 / math.pi
 
 	return true
