@@ -79,6 +79,10 @@ local function musicBtnClicked()
 	return true
 end
 
+local function badTouch(event)
+	gStoryboard.gotoScene("GameplayScene", "fade", 300)
+end
+
 function gScene:createScene(event)
 	local screenGroup = self.view
 
@@ -105,9 +109,7 @@ function gScene:createScene(event)
 	screenGroup:insert(gBackgroundImg)
 	screenGroup:insert(gStartInfo)
 
-	Runtime:addEventListener("touch", function(event)
-		gStoryboard.gotoScene("GameplayScene", "fade", 300)
-	end)
+	Runtime:addEventListener("touch", badTouch)
 end
 
 function gScene:enterScene(event)
@@ -116,6 +118,8 @@ function gScene:enterScene(event)
 end
 
 function gScene:exitScene(event)
+
+	Runtime:removeEventListener("touch", badTouch)
 	deactivateMenuButtons()
 	gBackgroundImg = nil
 	gStartBtn = nil
