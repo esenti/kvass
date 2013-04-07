@@ -185,13 +185,16 @@ local function nextFrame()
 
 	for i = 1, #gGame.bullets, 1 do
 		gGame.bullets[i].x, gGame.bullets[i].y = trajectory(gGame.bullets[i].fun, gGame.time - gGame.bullets[i].start, gGame.bullets[i].param)
+	
+		local x2, y2 = trajectory(gGame.bullets[i].fun, gGame.time - gGame.bullets[i].start + 0.0000001, gGame.bullets[i].param)
+		gGame.bullets[i].rotation = math.atan2(y2 - gGame.bullets[i].y, x2 - gGame.bullets[i].x) * 180 / math.pi
 	end
 
-	local x, y = trajectory(0, gGame.time, gGame.param)
-	gGame.bulletTest.x = x
-	gGame.bulletTest.y = y
-	local x2, y2 = trajectory(0, gGame.time + 0.0000001, gGame.param)
-	gGame.bulletTest.rotation = math.atan2(y2 - y, x2 - x) * 180 / math.pi
+	--local x, y = trajectory(0, gGame.time, gGame.param)
+	--gGame.bulletTest.x = x
+	--gGame.bulletTest.y = y
+	--local x2, y2 = trajectory(0, gGame.time + 0.0000001, gGame.param)
+	--gGame.bulletTest.rotation = math.atan2(y2 - y, x2 - x) * 180 / math.pi
 
 	return true
 end
