@@ -98,6 +98,9 @@ local function onTouch(event)
 end
 
 local function sfdsafaRocket()
+
+	audio.play(_G.sound.explosion)
+
 	gGame.rocket = display.newImageRect("gfx/game/rocket.png", 76 / 2, 134 / 2)
 	gGame.rocket.x, gGame.rocket.y = 420, 210
 	gScreenGroup:insert(gGame.rocket)
@@ -116,6 +119,9 @@ local function sfdsafaRocket()
 end
 
 local function sfdsafaSilos()
+
+	audio.play(_G.sound.explosion)
+
 	gGame.silos = display.newImageRect("gfx/game/rocket.png", 76 / 2, 134 / 2)
 	gGame.silos.x, gGame.silos.y = 310, 260
 	gScreenGroup:insert(gGame.silos)
@@ -239,6 +245,8 @@ local function nextFrame()
 		gPhysics.addBody(bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
 
 		gGame.param = 0.1
+
+		audio.play(_G.sound.shot)
 	end
 
 	if gGame.turningDirection > 0 then
