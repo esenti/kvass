@@ -112,9 +112,9 @@ local function hitRocket(dmg)
 	end
 
 	if gGame.rocketLife < 0 then
-		gGame.rocket:removeSelf()
-		gGame.rocket = nil
-		timer.performWithDelay(1, sfdsafaRocket, 1)
+		gGame.silos:removeSelf()
+		gGame.silos = nil
+		timer.performWithDelay(1, sfdsafaSilos, 1)
 	else
 		gGame.rocketLifeImgBack = display.newRect(390, 120, 60, 10)
 		gGame.rocketLifeImgBack:setFillColor(255, 0, 0)
@@ -134,9 +134,9 @@ local function hitSilos(dmg)
 	end
 
 	if gGame.silosLife < 0 then
-		gGame.silos:removeSelf()
-		gGame.silos = nil
-		timer.performWithDelay(1, sfdsafaSilos, 1)
+		gGame.rocket:removeSelf()
+		gGame.rocket = nil
+		timer.performWithDelay(1, sfdsafaRocket, 1)
 	else
 		gGame.silosLifeImgBack = display.newRect(280, 230, 60, 10)
 		gGame.silosLifeImgBack:setFillColor(255, 0, 0)
@@ -310,11 +310,6 @@ function gScene:createScene(event)
 	--gPhysics.addBody(gGame.bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
 	--gGame.bullet:setLinearVelocity(0, -100)
 
-
-	gGame.bulletTest = display.newImageRect("gfx/game/items/red.png", 32, 32)
-	gGame.bulletTest.x, gGame.bulletTest.y = 100, 100
-	gScreenGroup:insert(gGame.bulletTest)
-
 	gGame.rocketLife = 60
 	gGame.silosLife = 60
 
@@ -355,14 +350,6 @@ function gScene:exitScene(event)
 	gScoreText = nil
 	gPowerupText:removeSelf()
 	gPowerupText = nil
-
-
-	gGame.bulletTest = display.newImageRect("gfx/game/items/red.png", 32, 32)
-	gGame.bulletTest.x, gGame.bulletTest.y = 100, 100
-	gScreenGroup:insert(gGame.bulletTest)
-
-
-
 
 	gGame = nil
 end
