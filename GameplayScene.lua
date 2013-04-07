@@ -15,8 +15,8 @@ local gCurrentlyTouchedPoint = {}
 local gTouchingPoints = {}
 
 local trajectories = {
-	function(t, p) return -p * t, 3.7 * (t^2 - t) end,
-	function(t, p) return p * t, 3.7 * (t^2 - t) end,
+	function(t, p) return 2 * p * t, 3.7 * (t^2 - t) end,
+	function(t, p) return 2 * p * t, 2 * (math.cos(6*t) - 1) / (4*p) end,
 	--function(t, p) return t, -t^2 + p * t end
 }
 
@@ -26,7 +26,7 @@ local sizes = {
 
 local function trajectory(fun, time, param)
 	local x, y = trajectories[fun % table.getn(trajectories) + 1](time / 1000, param);
-	return display.contentWidth * 0.22 + x * 50 * param, display.contentHeight * 0.65 + y * display.contentHeight * 0.65
+	return display.contentWidth * 0.18 + x * 50 * param, display.contentHeight * 0.73 + y * display.contentHeight * 0.73
 end
 
 local function zonk(event)
@@ -206,7 +206,7 @@ local function nextFrame()
 	gScoreText.text = gGame.param
 
 	for i = 1, 100, 1 do
-		gGame.trajectory[i].x, gGame.trajectory[i].y = trajectory(gGame.bullId, (10000 / 100) * i, gGame.param)
+		gGame.trajectory[i].x, gGame.trajectory[i].y = trajectory(gGame.bullId, (2000 / 100) * (i-1), gGame.param)
 	end
 
 	for i = 1, #gGame.bullets, 1 do
@@ -330,7 +330,7 @@ function gScene:createScene(event)
 
 	gGame.param = 0
 	gGame.turningDirection = 0
-	gGame.bullId = 1
+	gGame.bullId = 0
 
 	gGame.logicTimer = timer.performWithDelay(1000 / 60, function() return nextFrame() end, 0)
 end
