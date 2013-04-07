@@ -17,7 +17,7 @@ local gTouchingPoints = {}
 local trajectories = {
 	--function(t, p) return 2 * p * t, 3.7 * (t^2 - t) end,
 	--function(t, p) return 2 * p * t, 2 * (math.cos(6*t) - 1) / (4*p) end,
-	function(t, p) return t + 0.1*math.sin(30*t-0.5), -t^2 + t + 0.1*math.cos(30*t-0.5) end,
+	function(t, p) return t + 0.1*math.sin(30*t-0.5), t^2 - t - 0.1*math.cos(30*t-0.5) end,
 	--function(t, p) return t, -t^2 + p * t end
 }
 
