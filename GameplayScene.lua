@@ -119,6 +119,8 @@ local function hitSilos(dmg)
 end
 
 local function onCollision(event)
+	if not gGame then return end
+	
 	if event.object1 == gGame.rocket then
 		event.object2:removeSelf()
 		hitRocket(40)
@@ -185,16 +187,22 @@ local function nextFrame()
 end
 
 local function destroyAllData()
-	if not gGame then
+	if not gGame or gGame.silos then
 		return
 	end
+
+	gGame.cannonShadow:removeSelf()
 	gGame.cannon:removeSelf()
-	gGame.cannon = nil
+	gGame.rocketShadow:removeSelf()
 	gGame.rocket:removeSelf()
-	gGame.rocket = nil
 	gGame.silos:removeSelf()
-	gGame.silos = nil
 	gGame.bullet:removeSelf()
+
+	gGame.cannonShadow = nil
+	gGame.cannon = nil
+	gGame.rocketShadow = nil
+	gGame.rocket = nil
+	gGame.silos = nil
 	gGame.bullet = nil
 end
 
@@ -302,6 +310,14 @@ function gScene:exitScene(event)
 	gScoreText = nil
 	gPowerupText:removeSelf()
 	gPowerupText = nil
+
+
+	gGame.bulletTest = display.newImageRect("gfx/game/items/red.png", 32, 32)
+	gGame.bulletTest.x, gGame.bulletTest.y = 100, 100
+	gScreenGroup:insert(gGame.bulletTest)
+
+
+
 
 	gGame = nil
 end
