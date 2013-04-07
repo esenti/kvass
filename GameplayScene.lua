@@ -1,5 +1,4 @@
 local gStoryboard = require("storyboard")
-local gButtonsManager  = require("ButtonsManager")
 local gScene = gStoryboard.newScene()
 local gPhysics = require("physics")
 gPhysics.start()
@@ -22,7 +21,6 @@ local trajectories = {
 }
 
 local function trajectory(fun, time, param)
-	-- return display.contentWidth / 2 + math.sin(time / 1000) * 50 * param, display.contentHeight / 2 + math.cos(time / 1000) * 50
 	local x, y = trajectories[fun % table.getn(trajectories) + 1](time / 1000, param);
 	return display.contentWidth * 0.22 + x * 50 * param, display.contentHeight * 0.65 + y * display.contentHeight * 0.65
 end
@@ -65,11 +63,93 @@ local function onTouch(event)
 	return true
 end
 
+local function sfdsafaRocket()
+	gGame.rocket = display.newImageRect("gfx/game/rocket.png", 76 / 2, 134 / 2)
+	gGame.rocket.x, gGame.rocket.y = 420, 210
+	gScreenGroup:insert(gGame.rocket)
+	gPhysics.addBody(gGame.rocket, { density = 1, friction = -1, bounce = 1, radius = 20 })
+	gGame.rocket:setLinearVelocity(0, -100)
+end
+
+local function sfdsafaSilos()
+	gGame.silos = display.newImageRect("gfx/game/rocket.png", 76 / 2, 134 / 2)
+	gGame.silos.x, gGame.silos.y = 310, 260
+	gScreenGroup:insert(gGame.silos)
+	gPhysics.addBody(gGame.silos, { density = 1, friction = -1, bounce = 1, radius = 20 })
+	gGame.silos:setLinearVelocity(0, -100)
+end
+
+
+local function hitRocket(dmg)
+	gGame.rocketLife = gGame.rocketLife - dmg
+
+	if gGame.rocketLifeBack then
+		gGame.rocketLifeImgBack:removeSelf()
+		gGame.rocketLifeImg:removeSelf()
+		gGame.rocketLifeImgBack = nil
+		gGame.rocketLifeImg = nil
+	end
+
+	if gGame.rocketLife < 0 then
+		gGame.rocket:removeSelf()
+		gGame.rocket = nil
+		timer.performWithDelay(1, sfdsafaRocket, 1)
+	else
+		gGame.rocketLifeImgBack = display.newRect(390, 120, 60, 10)
+		gGame.rocketLifeImgBack:setFillColor(255, 0, 0)
+		gGame.rocketLifeImg = display.newRect(390, 120, gGame.rocketLife, 10)
+		gGame.rocketLifeImg:setFillColor(0, 255, 0)
+	end
+end
+
+local function hitSilos(dmg)
+	gGame.silosLife = gGame.silosLife - dmg
+
+	if gGame.silosLifeBack then
+		gGame.silosLifeImgBack:removeSelf()
+		gGame.silosLifeImg:removeSelf()
+		gGame.silosLifeImgBack = nil
+		gGame.silosLifeImg = nil
+	end
+
+	if gGame.silosLife < 0 then
+		gGame.silos:removeSelf()
+		gGame.silos = nil
+		timer.performWithDelay(1, sfdsafaSilos, 1)
+	else
+		gGame.silosLifeImgBack = display.newRect(280, 230, 60, 10)
+		gGame.silosLifeImgBack:setFillColor(255, 0, 0)
+		gGame.silosLifeImg = display.newRect(280, 230, gGame.silosLife, 10)
+		gGame.silosLifeImg:setFillColor(0, 255, 0)
+	end
+end
+
 local function onCollision(event)
-	print("message")
+	if not gGame then return end
+	
+	if event.object1 == gGame.rocket then
+		event.object2:removeSelf()
+		hitRocket(40)
+	end
+	if event.object2 == gGame.rocket then
+		event.object1:removeSelf()
+		hitRocket(40)
+	end
+	if event.object1 == gGame.silos then
+		event.object2:removeSelf()
+		hitSilos(40)
+	end
+	if event.object2 == gGame.silos then
+		event.object1:removeSelf()
+		hitSilos(40)
+	end
 end
 
 local function nextFrame()
+	if (gGame.silos and gGame.silos.y < -100) or (gGame.rocket and gGame.rocket.y < -100) then
+		print("fgsfdg sfdgsfd gdsfg dfs gfdsgsd")
+	end
+
 	gGame.time = gGame.time + 1000 / 60.0
 	gGame.timeToNext = gGame.timeToNext + 1000 / 60.0
 
@@ -117,14 +197,22 @@ local function nextFrame()
 end
 
 local function destroyAllData()
-	if not gGame then
+	if not gGame or gGame.silos then
 		return
 	end
+
+	gGame.cannonShadow:removeSelf()
 	gGame.cannon:removeSelf()
-	gGame.cannon = nil
+	gGame.rocketShadow:removeSelf()
 	gGame.rocket:removeSelf()
-	gGame.rocket = nil
+	gGame.silos:removeSelf()
 	gGame.bullet:removeSelf()
+
+	gGame.cannonShadow = nil
+	gGame.cannon = nil
+	gGame.rocketShadow = nil
+	gGame.rocket = nil
+	gGame.silos = nil
 	gGame.bullet = nil
 end
 
@@ -156,40 +244,49 @@ function gScene:createScene(event)
 	gGame.time = 0
 	gGame.timeToNext = 0
 
-	gGame.cannonShadow = display.newImageRect("gfx/game/cannon_shadow.png", 169, 95)
-	gGame.cannonShadow.x, gGame.cannonShadow.y = 70, display.contentHeight - 138/2
+	gGame.cannonShadow = display.newImageRect("gfx/game/cannon_shadow.png", 169 / 2, 95 / 2)
+	gGame.cannonShadow.x, gGame.cannonShadow.y = 70, display.contentHeight - 138/2 + 10
 	gScreenGroup:insert(gGame.cannonShadow)
 
-	gGame.cannon = display.newImageRect("gfx/game/cannon.png", 100, 76)
-	gGame.cannon.x, gGame.cannon.y = 60, display.contentHeight - 138/2 - 10
+	gGame.cannon = display.newImageRect("gfx/game/cannon.png", 100 / 2, 76 / 2)
+	gGame.cannon.x, gGame.cannon.y = 60, display.contentHeight - 138/2
 	gScreenGroup:insert(gGame.cannon)
 	gPhysics.addBody(gGame.cannon, "static")
 
 
-	gGame.rocketShadow = display.newImageRect("gfx/game/rocket_shadow.png", 153, 100)
-	gGame.rocketShadow.x, gGame.rocketShadow.y = 458, 226
+	gGame.rocketShadow = display.newImageRect("gfx/game/rocket_shadow.png", 153 / 2, 100 / 2)
+	gGame.rocketShadow.x, gGame.rocketShadow.y = 445, 220
 	gScreenGroup:insert(gGame.rocketShadow)
 
-	gGame.rocket = display.newImageRect("gfx/game/rocket.png", 76, 134)
-	gGame.rocket.x, gGame.rocket.y = 420, 200
+	gGame.rocket = display.newImageRect("gfx/game/rocket.png", 76 / 2, 134 / 2)
+	gGame.rocket.x, gGame.rocket.y = 420, 210
 	gScreenGroup:insert(gGame.rocket)
 	gPhysics.addBody(gGame.rocket, "static")
 
-	gGame.silo = display.newImageRect("gfx/game/silo.png", 86, 24)
-	gGame.silo.x, gGame.silo.y = 310, 260
-	gScreenGroup:insert(gGame.silo)
-	gPhysics.addBody(gGame.silo, "static")
+	gGame.silos = display.newImageRect("gfx/game/silo.png", 86 / 2, 24 / 2)
+	gGame.silos.x, gGame.silos.y = 310, 260
+	gScreenGroup:insert(gGame.silos)
+	gPhysics.addBody(gGame.silos, "static")
 
-	gGame.bullet = display.newImageRect("gfx/game/items/bullet.png", 38, 55)
+	gGame.anotherSilo = display.newImageRect("gfx/game/silo.png", 86 / 2, 24 / 2)
+	gGame.anotherSilo.x, gGame.anotherSilo.y = 360, 235
+	gScreenGroup:insert(gGame.anotherSilo)
+	gPhysics.addBody(gGame.anotherSilo, "static")
+
+	gGame.bullet = display.newImageRect("gfx/game/items/mcpixel.png", 18 / 2, 84 / 2)
 	gGame.bullet.x, gGame.bullet.y = 100, 100
 	gGame.bullet.rotation = 90
 	gScreenGroup:insert(gGame.bullet)
 	gPhysics.addBody(gGame.bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
-	gGame.bullet:setLinearVelocity(20, 5)
+	gGame.bullet:setLinearVelocity(0, -100)
+
 
 	gGame.bulletTest = display.newImageRect("gfx/game/items/red.png", 32, 32)
 	gGame.bulletTest.x, gGame.bulletTest.y = 100, 100
 	gScreenGroup:insert(gGame.bulletTest)
+
+	gGame.rocketLife = 60
+	gGame.silosLife = 60
 
 	gGame.bullets = {}
 
@@ -228,6 +325,14 @@ function gScene:exitScene(event)
 	gScoreText = nil
 	gPowerupText:removeSelf()
 	gPowerupText = nil
+
+
+	gGame.bulletTest = display.newImageRect("gfx/game/items/red.png", 32, 32)
+	gGame.bulletTest.x, gGame.bulletTest.y = 100, 100
+	gScreenGroup:insert(gGame.bulletTest)
+
+
+
 
 	gGame = nil
 end
