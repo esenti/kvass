@@ -58,6 +58,22 @@ local function onTouch(event)
 	return true
 end
 
+local function sfdsafaRocket()
+	gGame.rocket = display.newImageRect("gfx/game/rocket.png", 76, 134)
+	gGame.rocket.x, gGame.rocket.y = 420, 200
+	gScreenGroup:insert(gGame.rocket)
+	gPhysics.addBody(gGame.rocket, { density = 1, friction = -1, bounce = 1, radius = 20 })
+	gGame.rocket:setLinearVelocity(0, -100)
+end
+
+local function sfdsafaSilos()
+	gGame.silos = display.newImageRect("gfx/game/silo.png", 86, 24)
+	gGame.silos.x, gGame.silos.y = 310, 260
+	gScreenGroup:insert(gGame.silos)
+	gPhysics.addBody(gGame.silos, { density = 1, friction = -1, bounce = 1, radius = 20 })
+	gGame.silos:setLinearVelocity(0, -100)
+end
+
 local function hitRocket(dmg)
 	gGame.rocketLife = gGame.rocketLife - dmg
 
@@ -71,16 +87,13 @@ local function hitRocket(dmg)
 	if gGame.rocketLife < 0 then
 		gGame.rocket:removeSelf()
 		gGame.rocket = nil
-		gGame.rocket = display.newImageRect("gfx/game/rocket.png", 76, 134)
-		gGame.rocket.x, gGame.rocket.y = 420, 200
-		gScreenGroup:insert(gGame.rocket)
-		gPhysics.addBody(gGame.rocket, { density = 1, friction = -1, bounce = 1, radius = 20 })
+		timer.performWithDelay(1, sfdsafaRocket, 1) 
+	else
+		gGame.rocketLifeImgBack = display.newRect(390, 120, 60, 10)
+		gGame.rocketLifeImgBack:setFillColor(255, 0, 0)
+		gGame.rocketLifeImg = display.newRect(390, 120, gGame.rocketLife, 10)
+		gGame.rocketLifeImg:setFillColor(0, 255, 0)
 	end
-
-	gGame.rocketLifeImgBack = display.newRect(390, 120, 60, 10)
-	gGame.rocketLifeImgBack:setFillColor(255, 0, 0)
-	gGame.rocketLifeImg = display.newRect(390, 120, gGame.rocketLife, 10)
-	gGame.rocketLifeImg:setFillColor(0, 255, 0)
 end
 
 local function hitSilos(dmg)
@@ -93,28 +106,34 @@ local function hitSilos(dmg)
 		gGame.silosLifeImg = nil
 	end
 
-	gGame.silosLifeImgBack = display.newRect(280, 230, 60, 10)
-	gGame.silosLifeImgBack:setFillColor(255, 0, 0)
-	gGame.silosLifeImg = display.newRect(280, 230, gGame.silosLife, 10)
-	gGame.silosLifeImg:setFillColor(0, 255, 0)
+	if gGame.silosLife < 0 then
+		gGame.silos:removeSelf()
+		gGame.silos = nil
+		timer.performWithDelay(1, sfdsafaSilos, 1) 
+	else
+		gGame.silosLifeImgBack = display.newRect(280, 230, 60, 10)
+		gGame.silosLifeImgBack:setFillColor(255, 0, 0)
+		gGame.silosLifeImg = display.newRect(280, 230, gGame.silosLife, 10)
+		gGame.silosLifeImg:setFillColor(0, 255, 0)
+	end
 end
 
 local function onCollision(event)
 	if event.object1 == gGame.rocket then
 		event.object2:removeSelf()
-		hitRocket(5000)
+		hitRocket(40)
 	end
 	if event.object2 == gGame.rocket then
 		event.object1:removeSelf()
-		hitRocket(5000)
+		hitRocket(40)
 	end
 	if event.object1 == gGame.silos then
 		event.object2:removeSelf()
-		hitSilos(5000)
+		hitSilos(40)
 	end
 	if event.object2 == gGame.silos then
 		event.object1:removeSelf()
-		hitSilos(5000)
+		hitSilos(40)
 	end
 end
 
@@ -236,7 +255,8 @@ function gScene:createScene(event)
 	gGame.bullet.rotation = 90
 	gScreenGroup:insert(gGame.bullet)
 	gPhysics.addBody(gGame.bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
-	gGame.bullet:setLinearVelocity(20, 5)
+	gGame.bullet:setLinearVelocity(0, -100)
+
 
 	gGame.bulletTest = display.newImageRect("gfx/game/items/red.png", 32, 32)
 	gGame.bulletTest.x, gGame.bulletTest.y = 100, 100
