@@ -89,7 +89,6 @@ local function onTouch(event)
 
 		if gTouchingPoints[1].y < 20 then
 			jesus()
-			--gStoryboard.gotoScene("MenuScene", "fade", 300)
 		end
 	else
 		gGame.turningDirection = 0
@@ -104,6 +103,12 @@ local function sfdsafaRocket()
 	gScreenGroup:insert(gGame.rocket)
 	gPhysics.addBody(gGame.rocket, { density = 1, friction = -1, bounce = 1, radius = 20 })
 	gGame.rocket:setLinearVelocity(0, -100)
+
+	gGame.rocketShadow:removeSelf()
+	gGame.rocketShadow = nil
+
+	gGame.rocketBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
+	gGame.rocketBoom.x, gGame.rocketBoom.y = 420, 210
 end
 
 local function sfdsafaSilos()
@@ -112,6 +117,10 @@ local function sfdsafaSilos()
 	gScreenGroup:insert(gGame.silos)
 	gPhysics.addBody(gGame.silos, { density = 1, friction = -1, bounce = 1, radius = 20 })
 	gGame.silos:setLinearVelocity(0, -100)
+
+
+	gGame.siloBoom = display.newImageRect("gfx/game/boom.png", 240 / 2, 152 / 2)
+	gGame.siloBoom.x, gGame.siloBoom.y = 310, 260
 end
 
 
@@ -188,6 +197,23 @@ local function nextFrame()
 	gGame.time = gGame.time + 1000 / 60.0
 	gGame.timeToNext = gGame.timeToNext + 1000 / 60.0
 
+	gScoreText.text = 20 - math.round(gGame.time / 1000)
+	if gGame.time > 20000 then
+		if gGame.silosLife > 0 then
+			gGame.rocket:removeSelf()
+			gGame.rocket = nil
+			timer.performWithDelay(1, sfdsafaRocket, 1)
+			gGame.silosLife = 0
+		end
+
+		if gGame.rocketLife > 0 then
+			gGame.silos:removeSelf()
+			gGame.silos = nil
+			timer.performWithDelay(1, sfdsafaSilos, 1)
+			gGame.rocketLife = 0
+		end
+	end
+
 	if gGame.timeToNext < 500 then
 		gPowerupText.text = "3"
 	elseif gGame.timeToNext < 1000 then
@@ -215,7 +241,7 @@ local function nextFrame()
 	elseif gGame.turningDirection < 0 then
 		gGame.param = gGame.param - 0.01
 	end
-	gScoreText.text = gGame.param
+	--gScoreText.text = gGame.param
 
 	for i = 1, 100, 1 do
 		gGame.trajectory[i].x, gGame.trajectory[i].y = trajectory(gGame.bullId, (2000 / 100) * (i-1), gGame.param)
