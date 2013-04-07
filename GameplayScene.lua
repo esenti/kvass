@@ -192,6 +192,8 @@ local function nextFrame()
 		gScreenGroup:insert(bullet)
 		gGame.bullId = gGame.bullId + 1
 		gPhysics.addBody(bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
+
+		gGame.param = 1.5
 	end
 
 	if gGame.turningDirection > 0 then
@@ -324,7 +326,7 @@ function gScene:createScene(event)
 		gScreenGroup:insert(gGame.trajectory[i])
 	end
 
-	gGame.param = 0
+	gGame.param = 1.5
 	gGame.turningDirection = 0
 	gGame.bullId = 0
 
