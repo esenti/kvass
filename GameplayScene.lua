@@ -184,19 +184,19 @@ local function onCollision(event)
 
 	if event.object1 == gGame.rocket then
 		event.object2:removeSelf()
-		hitRocket(15)
+		hitRocket(14)
 	end
 	if event.object2 == gGame.rocket then
 		event.object1:removeSelf()
-		hitRocket(15)
+		hitRocket(14)
 	end
 	if event.object1 == gGame.silos then
 		event.object2:removeSelf()
-		hitSilos(15)
+		hitSilos(14)
 	end
 	if event.object2 == gGame.silos then
 		event.object1:removeSelf()
-		hitSilos(15)
+		hitSilos(14)
 	end
 end
 
