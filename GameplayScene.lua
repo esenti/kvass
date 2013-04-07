@@ -25,6 +25,26 @@ local function trajectory(fun, time, param)
 	return display.contentWidth * 0.22 + x * 50 * param, display.contentHeight * 0.65 + y * display.contentHeight * 0.65
 end
 
+local function zonk(event)
+	if event.phase == "began" then
+		gStoryboard.gotoScene("MenuScene", "fade", 300)
+	end
+
+	return true
+end
+
+local function jesus()
+	gEnd = display.newImageRect("gfx/game/end.png", display.contentWidth, display.contentHeight)
+	gEnd.x, gEnd.y = display.contentWidth / 2,  display.contentHeight / 2
+	gScene.view:insert(gEnd)
+
+	gEnd:addEventListener("touch", zonk)
+
+	return true
+
+end
+
+
 local function onTouch(event)
 	if event.phase == "began" then
 		table.insert(gTouchingPoints, {x = event.x, y = event.y, id = event.id})
@@ -54,7 +74,8 @@ local function onTouch(event)
 		end
 
 		if gTouchingPoints[1].y < 20 then
-			gStoryboard.gotoScene("MenuScene", "fade", 300)
+			jesus()
+			--gStoryboard.gotoScene("MenuScene", "fade", 300)
 		end
 	else
 		gGame.turningDirection = 0
@@ -83,7 +104,7 @@ end
 local function hitRocket(dmg)
 	gGame.rocketLife = gGame.rocketLife - dmg
 
-	if gGame.rocketLifeBack then
+	if gGame.rocketLifeImgBack then
 		gGame.rocketLifeImgBack:removeSelf()
 		gGame.rocketLifeImg:removeSelf()
 		gGame.rocketLifeImgBack = nil
@@ -105,7 +126,7 @@ end
 local function hitSilos(dmg)
 	gGame.silosLife = gGame.silosLife - dmg
 
-	if gGame.silosLifeBack then
+	if gGame.silosLifeImgBack then
 		gGame.silosLifeImgBack:removeSelf()
 		gGame.silosLifeImg:removeSelf()
 		gGame.silosLifeImgBack = nil
@@ -126,7 +147,7 @@ end
 
 local function onCollision(event)
 	if not gGame then return end
-	
+
 	if event.object1 == gGame.rocket then
 		event.object2:removeSelf()
 		hitRocket(40)
@@ -147,7 +168,7 @@ end
 
 local function nextFrame()
 	if (gGame.silos and gGame.silos.y < -100) or (gGame.rocket and gGame.rocket.y < -100) then
-		print("fgsfdg sfdgsfd gdsfg dfs gfdsgsd")
+		jesus()
 	end
 
 	gGame.time = gGame.time + 1000 / 60.0
@@ -213,6 +234,7 @@ local function destroyAllData()
 	gGame.rocket:removeSelf()
 	gGame.silos:removeSelf()
 	gGame.bullet:removeSelf()
+
 
 	gGame.cannonShadow = nil
 	gGame.cannon = nil
