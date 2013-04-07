@@ -164,7 +164,8 @@ local function nextFrame()
 	else
 		gGame.timeToNext = 0
 
-		local bullet = display.newImageRect("gfx/game/items/bullet.png", 32, 32)
+		local iggfdgsd = math.min(7, gGame.bullId)
+		local bullet = display.newImageRect("gfx/game/items/" .. iggfdgsd .. ".png", 32, 32)
 		bullet.x, bullet.y, bullet.start, bullet.fun, bullet.param = 100, 100, gGame.time, gGame.bullId, gGame.param
 		table.insert(gGame.bullets, bullet)
 		gScreenGroup:insert(bullet)
@@ -185,9 +186,11 @@ local function nextFrame()
 
 	for i = 1, #gGame.bullets, 1 do
 		gGame.bullets[i].x, gGame.bullets[i].y = trajectory(gGame.bullets[i].fun, gGame.time - gGame.bullets[i].start, gGame.bullets[i].param)
-	
-		local x2, y2 = trajectory(gGame.bullets[i].fun, gGame.time - gGame.bullets[i].start + 0.0000001, gGame.bullets[i].param)
-		gGame.bullets[i].rotation = math.atan2(y2 - gGame.bullets[i].y, x2 - gGame.bullets[i].x) * 180 / math.pi
+		if gGame.bullets[i].rotation ~= nil then
+			gGame.bullets[i].rotation = gGame.bullets[i].rotation + 5
+		end
+		--local x2, y2 = trajectory(gGame.bullets[i].fun, gGame.time - gGame.bullets[i].start + 0.0000001, gGame.bullets[i].param)
+		--gGame.bullets[i].rotation = math.atan2(y2 - gGame.bullets[i].y, x2 - gGame.bullets[i].x) * 180 / math.pi
 	end
 
 	--local x, y = trajectory(0, gGame.time, gGame.param)
@@ -276,12 +279,12 @@ function gScene:createScene(event)
 	gScreenGroup:insert(gGame.anotherSilo)
 	gPhysics.addBody(gGame.anotherSilo, "static")
 
-	gGame.bullet = display.newImageRect("gfx/game/items/mcpixel.png", 18 / 2, 84 / 2)
-	gGame.bullet.x, gGame.bullet.y = 100, 100
-	gGame.bullet.rotation = 90
-	gScreenGroup:insert(gGame.bullet)
-	gPhysics.addBody(gGame.bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
-	gGame.bullet:setLinearVelocity(0, -100)
+	--gGame.bullet = display.newImageRect("gfx/game/items/mcpixel.png", 18 / 2, 84 / 2)
+	--gGame.bullet.x, gGame.bullet.y = 100, 100
+	--gGame.bullet.rotation = 90
+	--gScreenGroup:insert(gGame.bullet)
+	--gPhysics.addBody(gGame.bullet, { density = 1, friction = -1, bounce = 1, radius = 20 })
+	--gGame.bullet:setLinearVelocity(0, -100)
 
 
 	gGame.bulletTest = display.newImageRect("gfx/game/items/red.png", 32, 32)
