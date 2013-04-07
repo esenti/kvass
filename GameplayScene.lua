@@ -68,6 +68,15 @@ local function hitRocket(dmg)
 		gGame.rocketLifeImg = nil
 	end
 
+	if gGame.rocketLife < 0 then
+		gGame.rocket:removeSelf()
+		gGame.rocket = nil
+		gGame.rocket = display.newImageRect("gfx/game/rocket.png", 76, 134)
+		gGame.rocket.x, gGame.rocket.y = 420, 200
+		gScreenGroup:insert(gGame.rocket)
+		gPhysics.addBody(gGame.rocket, { density = 1, friction = -1, bounce = 1, radius = 20 })
+	end
+
 	gGame.rocketLifeImgBack = display.newRect(390, 120, 60, 10)
 	gGame.rocketLifeImgBack:setFillColor(255, 0, 0)
 	gGame.rocketLifeImg = display.newRect(390, 120, gGame.rocketLife, 10)
@@ -93,19 +102,19 @@ end
 local function onCollision(event)
 	if event.object1 == gGame.rocket then
 		event.object2:removeSelf()
-		hitRocket(5)
+		hitRocket(5000)
 	end
 	if event.object2 == gGame.rocket then
 		event.object1:removeSelf()
-		hitRocket(5)
+		hitRocket(5000)
 	end
 	if event.object1 == gGame.silos then
 		event.object2:removeSelf()
-		hitSilos(5)
+		hitSilos(5000)
 	end
 	if event.object2 == gGame.silos then
 		event.object1:removeSelf()
-		hitSilos(5)
+		hitSilos(5000)
 	end
 end
 
